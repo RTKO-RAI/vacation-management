@@ -1,5 +1,6 @@
 package com.example.vacation_management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,4 +24,9 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    @JsonIgnore
+    private Project project;
 }

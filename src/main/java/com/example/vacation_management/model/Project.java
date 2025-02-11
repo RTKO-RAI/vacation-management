@@ -1,4 +1,3 @@
-
 package com.example.vacation_management.model;
 
 import jakarta.persistence.*;
@@ -7,29 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
+import java.util.List;
 
 @Entity
-@Table(name = "vacations")
+@Table(name = "projects")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vacation {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String name;
 
-    private int vacationYear;
-    private int totalVacationDays;
-    private int usedVacationDays;
-
-   private LocalDate startDate;
-
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> users;
 }

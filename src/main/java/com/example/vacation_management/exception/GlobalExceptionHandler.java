@@ -80,6 +80,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles VacationException for missing paths or endpoints.
+     */
+    @ExceptionHandler(VacationException.class)
+    public ResponseEntity<Map<String, Object>> handleVacationException(VacationException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+        errorResponse.put("error", "Vacation Error");
+        errorResponse.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
      * Handles all unexpected exceptions in the application.
      */
     @ExceptionHandler(Exception.class)
