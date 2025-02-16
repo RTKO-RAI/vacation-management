@@ -21,14 +21,13 @@ public class VacationController {
     @PostMapping("/create")
     public ResponseEntity<Vacation> createVacation(@RequestParam Long userId,
                                    @RequestParam int vacationYear,
-                                   @RequestParam int usedDays,
                                    @RequestParam String startDate) {
         try {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             LocalDate vacationStartDate = LocalDate.parse(startDate, formatter);
 
-            return ResponseEntity.ok(vacationService.createVacation(userId, vacationYear, usedDays, vacationStartDate));
+            return ResponseEntity.ok(vacationService.createVacation(userId, vacationYear, vacationStartDate));
         } catch (DateTimeParseException e) {
             throw new RuntimeException("Invalid date format. Please use dd-MM-yyyy");
         }

@@ -24,7 +24,9 @@ public class VacationService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
 
-    public Vacation createVacation(Long userId, int vacationYear, int usedDays, LocalDate startDate) {
+    private final int CURRENT_YEAR = 2025;
+
+    public Vacation createVacation(Long userId, int usedDays, LocalDate startDate) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Përdoruesi nuk u gjet!"));
 
@@ -45,7 +47,7 @@ public class VacationService {
             throw new VacationException("Nuk mund të merrni pushim, pasi më shumë se 50% e ekipit janë në pushim për këtë datë.");
         }
 
-        List<Vacation> existingVacations = vacationRepository.findAllByUserIdAndVacationYear(userId, vacationYear);
+        List<Vacation> existingVacations = vacationRepository.findAllByUserIdAndVacationYear(userId, CURRENT_YEAR);
 
         int totalUsedDays = existingVacations.stream().mapToInt(Vacation::getUsedVacationDays).sum();
         int totalRemainingDays = 20 - totalUsedDays;
@@ -56,7 +58,7 @@ public class VacationService {
 
         Vacation newVacation = new Vacation();
         newVacation.setUser(user);
-        newVacation.setVacationYear(vacationYear);
+        newVacation.setVacationYear(CURRENT_YEAR);
         newVacation.setUsedVacationDays(usedDays);
         newVacation.setTotalVacationDays(totalRemainingDays);
         newVacation.setStartDate(startDate);
@@ -65,21 +67,19 @@ public class VacationService {
 
 
     public VacationResponse getRemainingVacationDays(Long userId, int year) {
-        List<Vacation> vacations = vacationRepository.findAllByUserIdAndVacationYear(userId, year);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Përdoruesi nuk u gjet!"));
 
-        if (vacations.isEmpty()) {
-            throw new ResourceNotFoundException("Nuk u gjetën pushime për këtë përdorues në vitin " + year + ".");
-        }
+        List<Vacation> vacations = vacationRepository.findAllByUserIdAndVacationYear(userId, year);
 
         int totalUsedDays = vacations.stream().mapToInt(Vacation::getUsedVacationDays).sum();
         int remainingDays = 20 - totalUsedDays;
 
-        VacationResponse response = new VacationResponse(
-                vacations.get(0).getUser().getFirstName(),
-                vacations.get(0).getUser().getLastName(),
+        return new VacationResponse(
+                user.getFirstName(),
+                user.getLastName(),
                 remainingDays
         );
-        return response;
     }
 
 
