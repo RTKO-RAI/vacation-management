@@ -31,13 +31,13 @@ public class WorkHoursService {
 
         Project project = user.getProject();
         if (project == null) {
-            throw new RuntimeException("Përdoruesi nuk është i lidhur me asnjë projekt.");
+            throw new WorkingHoursException("Përdoruesi nuk është i lidhur me asnjë projekt.");
         }
 
         LocalDate today = LocalDate.now();
 
         if (today.getDayOfWeek().getValue() > 5) {
-            throw new RuntimeException("Nuk mund të regjistroni orë pune gjatë fundjavës.");
+            throw new WorkingHoursException("Nuk mund të regjistroni orë pune gjatë fundjavës.");
         }
 
         WorkHours workHours = workHoursRepository.findByUserAndWeekStartDate(user, today)

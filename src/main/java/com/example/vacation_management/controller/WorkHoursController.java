@@ -19,6 +19,5 @@ public class WorkHoursController {
     @GetMapping("/total/{userId}")
     public ResponseEntity<?> getWorkingHours(@PathVariable Long userId) {
         return ResponseEntity.ok(workHoursService.getWorkingHours(userId));
-
     }
 }
